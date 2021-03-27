@@ -1,5 +1,4 @@
 const usuariosData = require('../data/usuariosData');
-const { func } = require('../infra/database');
 
 exports.getUsuarios = function(){
     return usuariosData.getUsuarios();
@@ -12,3 +11,7 @@ exports.saveUsuario = function(usuario){
 exports.deleteUsuario = function(id){
     return usuariosData.deleteUsuario(id);
 }
+
+exports.updateUsuario = function(id, usuario){
+    return usuariosData.updateUsuario(id, usuario);
+};

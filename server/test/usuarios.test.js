@@ -80,3 +80,21 @@ test('Should delete a user', async function(){
     const users = await usuariosService.getUsuarios();
     expect(users).toHaveLength(0);
 });
+
+test('Should update a user', async function(){
+    //Cria o endereco
+    const enderecotest = address();
+    const enderecores = await enderecoService.saveEndereco(enderecotest);
+    //Cria o usuario
+    const datauser = usertest();
+    datauser.id_endereco = enderecores.id_endereco;
+    const user = await usuariosService.saveUsuario(datauser);
+    user.nome = generate();
+    user.senha = generate();
+    const response = await request(`http://localhost:3000/usuario/${user.id_usuario}`, 'put', user);
+    const newUser = response.data;
+    expect(user.nome).toBe(newUser.nome);
+    expect(user.senha).toBe(newUser.senha);
+    await enderecoService.deleteEndereco(user.id_endereco);
+
+});

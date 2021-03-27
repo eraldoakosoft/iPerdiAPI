@@ -18,5 +18,12 @@ router.delete('/usuario/:id', async function(req, res){
     res.end();
 });
 
+router.put('/usuario/:id', async function(req, res){
+    const user = req.body;
+    console.log(user);
+    console.log(req.params.id);
+    const newUser = await usuariosService.updateUsuario(req.params.id, user);
+    res.json(newUser);
+});
 
 module.exports = router;

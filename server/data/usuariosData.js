@@ -12,3 +12,8 @@ exports.saveUsuario = function(usuario){
 exports.deleteUsuario = function(id){
     return database.none('delete from usuario where id_usuario = $1', [id]);
 };
+
+exports.updateUsuario = function(id, usuario){
+    return database.one('UPDATE usuario SET nick_name = $1, nome = $2, genero = $3, cpf = $4, rg = $5, nome_mae = $6, data_nascimento = $7, senha = $8, email = $9, telefone = $10, status = $11, updated_at = $12 WHERE id_usuario = $13 RETURNING * ',
+    [usuario.nick_name, usuario.nome, usuario.genero, usuario.cpf, usuario.rg, usuario.nome_mae, usuario.data_nascimento, usuario.senha, usuario.email, usuario.telefone, usuario.status, usuario.updated_at , id]);
+};
