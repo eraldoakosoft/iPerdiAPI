@@ -19,6 +19,7 @@ const address = function(){
         "cep": generate(),
         "cidade": generate(),
         "uf": 'SP',
+        "status":true,
         "created_at": created_at,
         "update_at": updated_at
     }

@@ -13,6 +13,10 @@ router.post('/usuario', async function(req, res){
     res.json(newUser);
 });
 
+router.delete('/usuario/:id', async function(req, res){
+    await usuariosService.deleteUsuario(req.params.id);
+    res.end();
+});
 
 
 module.exports = router;

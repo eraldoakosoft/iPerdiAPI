@@ -14,4 +14,9 @@ router.post('/', async function(req, res){
     res.json(newEndereco);
 });
 
+router.delete('/:id', async function(req, res){
+    await enderecoService.deleteEndereco(req.params.id);
+    res.end();
+});
+
 module.exports = router;
