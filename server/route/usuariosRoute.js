@@ -13,4 +13,6 @@ router.post('/usuario', async function(req, res){
     res.json(newUser);
 });
 
+
+
 module.exports = router;

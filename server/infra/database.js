@@ -5,7 +5,7 @@ const db = pgp({
     password: 'Einstein3628',
     host: 'localhost',
     port: 5432,
-    database: 'iPerdiV2'
+    database: 'iPerdiV4'
 });
 
 module.exports = db;
