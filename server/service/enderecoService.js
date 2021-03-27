@@ -1,7 +1,11 @@
 const enderecoData = require('../data/enderecoData');
 
-exports.getEndereco = function(){
-    return enderecoData.getEndereco();
+exports.getEnderecos = function(){
+    return enderecoData.getEnderecos();
+};
+
+exports.getEndereco = function(id){
+    return enderecoData.getEndereco(id);
 };
 
 exports.saveEndereco = function(endereco){
@@ -10,4 +14,8 @@ exports.saveEndereco = function(endereco){
 
 exports.deleteEndereco = function(id){
     return enderecoData.deleteEndereco(id);
-}
+};
+
+exports.updateEndereco = function(id, endereco){
+    return enderecoData.updateEndereco(id, endereco);
+};
