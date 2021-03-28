@@ -3,6 +3,7 @@ const axios = require('axios');
 const dateFormat = require('../help/dateFormat');
 const usuariosService = require('../service/usuariosService');
 const enderecoService = require('../service/enderecoService');
+const postsService = require('../service/postsService');
 
 const generate = function () {
     return crypto.randomBytes(5).toString('hex');
@@ -72,10 +73,10 @@ const postTeste = function(id_usuario, id_endereco){
     return post;
 }
 
-/* test('Should get a users', async function(){
-    const response = await request('http://localhost:3000/usuarios', 'get');
+test('Deve pegar todas as postagens', async function(){
+    const response = await request('http://localhost:3000/posts', 'get');
     //console.log(response.data)
-}); */
+});
 
 test('Should save a post', async function(){
     const enderecoUser = await enderecoService.saveEndereco(enderecoTeste());
@@ -83,44 +84,62 @@ test('Should save a post', async function(){
     const usuario = await usuariosService.saveUsuario(usuarioTeste(enderecoUser.id_endereco));
     const postagem = postTeste(usuario.id_usuario, enderecoPost.id_endereco);
     //console.log(postagem);
-    const response = request('http://localhost:3000/posts', 'post', postagem);
+    const response = await request('http://localhost:3000/posts', 'post', postagem);
     const post = response.data;
     //console.log(post);
-    //await usuariosService.deleteUsuario(postagem.id_usuario);
-    //await enderecoService.deleteEndereco(enderecoUser.id_endereco);
-    //await enderecoService.deleteEndereco(enderecoPost.id_endereco); 
+    await postsService.deletePost(post.id_postagem);
+    await usuariosService.deleteUsuario(postagem.id_usuario);
+    await enderecoService.deleteEndereco(enderecoUser.id_endereco);
+    await enderecoService.deleteEndereco(enderecoPost.id_endereco); 
 });
 
 
-/* 
-test('Should delete a user', async function(){
-    //Cria o endereco
-    const enderecotest = address();
-    const enderecores = await enderecoService.saveEndereco(enderecotest);
-    //Cria o usuario
-    const datauser = usertest();
-    datauser.id_endereco = enderecores.id_endereco;
-    const user = await usuariosService.saveUsuario(datauser);
-    await request(`http://localhost:3000/usuario/${user.id_usuario}`, 'delete');
-    await enderecoService.deleteEndereco(user.id_endereco);
-    const users = await usuariosService.getUsuarios();
-    expect(users).toHaveLength(0);
+test('Should delete a post', async function(){
+    const endeUser = await enderecoService.saveEndereco(enderecoTeste());
+    const endePost = await enderecoService.saveEndereco(enderecoTeste());
+    const user = await usuariosService.saveUsuario(usuarioTeste(endeUser.id_endereco));
+    const post = postTeste(user.id_usuario, endePost.id_endereco);
+    const newpost = await postsService.savePost(post);
+    await request(`http://localhost:3000/posts/${newpost.id_postagem}`, 'delete');
+
 });
 
-test('Should update a user', async function(){
-    //Cria o endereco
-    const enderecotest = address();
-    const enderecores = await enderecoService.saveEndereco(enderecotest);
-    //Cria o usuario
-    const datauser = usertest();
-    datauser.id_endereco = enderecores.id_endereco;
-    const user = await usuariosService.saveUsuario(datauser);
-    user.nome = generate();
-    user.senha = generate();
-    const response = await request(`http://localhost:3000/usuario/${user.id_usuario}`, 'put', user);
-    const newUser = response.data;
-    expect(user.nome).toBe(newUser.nome);
-    expect(user.senha).toBe(newUser.senha);
+
+test('Should update a post', async function(){
+    const endeUser = await enderecoService.saveEndereco(enderecoTeste());
+    const endePost = await enderecoService.saveEndereco(enderecoTeste());
+    const user = await usuariosService.saveUsuario(usuarioTeste(endeUser.id_endereco));
+    const post = postTeste(user.id_usuario, endePost.id_endereco);
+    const newpost = await postsService.savePost(post);
+    newpost.nome = generate();
+    newpost.tipo = generate();
+    await request(`http://localhost:3000/posts/${newpost.id_postagem}`, 'put', newpost);
+    const updatedPost = await postsService.getPost(newpost.id_postagem);
+    expect(newpost.nome).toBe(updatedPost.nome);
+    expect(newpost.tipo).toBe(updatedPost.tipo);
+    await postsService.deletePost(updatedPost.id_postagem);
+    await usuariosService.deleteUsuario(user.id_usuario);
+    await enderecoService.deleteEndereco(updatedPost.id_endereco);
     await enderecoService.deleteEndereco(user.id_endereco);
 
-}); */
+});
+
+test('Deve mudar apenas o status da postagem', async function(){
+    const endeUser = await enderecoService.saveEndereco(enderecoTeste());
+    const endePost = await enderecoService.saveEndereco(enderecoTeste());
+    const user = await usuariosService.saveUsuario(usuarioTeste(endeUser.id_endereco));
+    const post = postTeste(user.id_usuario, endePost.id_endereco);
+    const newpost = await postsService.savePost(post);
+    if(newpost.status){
+        newpost.status = false;
+    }else{
+        newpost.status = true;
+    }
+    await request(`http://localhost:3000/posts/status/${newpost.id_postagem}`, 'put', newpost);
+    const updatedPost = await postsService.getPost(newpost.id_postagem);
+    expect(newpost.status).toBe(updatedPost.status);
+    await postsService.deletePost(updatedPost.id_postagem);
+    await usuariosService.deleteUsuario(user.id_usuario);
+    await enderecoService.deleteEndereco(updatedPost.id_endereco);
+    await enderecoService.deleteEndereco(user.id_endereco);
+});
