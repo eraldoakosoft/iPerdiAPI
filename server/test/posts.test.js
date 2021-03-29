@@ -83,14 +83,12 @@ test('Should save a post', async function(){
     const enderecoPost = await enderecoService.saveEndereco(enderecoTeste());
     const usuario = await usuariosService.saveUsuario(usuarioTeste(enderecoUser.id_endereco));
     const postagem = postTeste(usuario.id_usuario, enderecoPost.id_endereco);
-    //console.log(postagem);
     const response = await request('http://localhost:3000/posts', 'post', postagem);
     const post = response.data;
-    //console.log(post);
     await postsService.deletePost(post.id_postagem);
     await usuariosService.deleteUsuario(postagem.id_usuario);
     await enderecoService.deleteEndereco(enderecoUser.id_endereco);
-    await enderecoService.deleteEndereco(enderecoPost.id_endereco); 
+    await enderecoService.deleteEndereco(enderecoPost.id_endereco);
 });
 
 
@@ -101,7 +99,11 @@ test('Should delete a post', async function(){
     const post = postTeste(user.id_usuario, endePost.id_endereco);
     const newpost = await postsService.savePost(post);
     await request(`http://localhost:3000/posts/${newpost.id_postagem}`, 'delete');
-
+    await usuariosService.deleteUsuario(user.id_usuario);
+    await enderecoService.deleteEndereco(endeUser.id_endereco);
+    await enderecoService.deleteEndereco(endePost.id_endereco);
+    const posts = await postsService.getPosts();
+    expect(posts).toHaveLength(0);
 });
 
 
@@ -119,8 +121,8 @@ test('Should update a post', async function(){
     expect(newpost.tipo).toBe(updatedPost.tipo);
     await postsService.deletePost(updatedPost.id_postagem);
     await usuariosService.deleteUsuario(user.id_usuario);
-    await enderecoService.deleteEndereco(updatedPost.id_endereco);
-    await enderecoService.deleteEndereco(user.id_endereco);
+    await enderecoService.deleteEndereco(endeUser.id_endereco);
+    await enderecoService.deleteEndereco(endePost.id_endereco);
 
 });
 
@@ -140,6 +142,6 @@ test('Deve mudar apenas o status da postagem', async function(){
     expect(newpost.status).toBe(updatedPost.status);
     await postsService.deletePost(updatedPost.id_postagem);
     await usuariosService.deleteUsuario(user.id_usuario);
-    await enderecoService.deleteEndereco(updatedPost.id_endereco);
-    await enderecoService.deleteEndereco(user.id_endereco);
+    await enderecoService.deleteEndereco(endeUser.id_endereco);
+    await enderecoService.deleteEndereco(endePost.id_endereco);
 });

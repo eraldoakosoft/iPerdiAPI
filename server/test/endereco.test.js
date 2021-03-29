@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const axios = require('axios');
 const dateFormat = require('../help/dateFormat');
 const enderecoService = require('../service/enderecoService');
-const usuariosService = require('../service/usuariosService');
 
 const generate = function () {
     return crypto.randomBytes(5).toString('hex');
@@ -57,5 +56,5 @@ test('Should update a endereco', async function(){
     const newAddress = response.data;
     expect(addres1.cidade).toBe(newAddress.cidade);
     expect(addres1.cep).toBe(newAddress.cep);
-    await enderecoService.deleteEndereco(newAddress.id_endereco);
+    await enderecoService.deleteEndereco(addres1.id_endereco);
 });

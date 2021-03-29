@@ -4,6 +4,10 @@ exports.getUsuarios = function(){
     return usuariosData.getUsuarios();
 };
 
+exports.getUsuario = function(id){
+    return usuariosData.getUsuario(id);
+};
+
 exports.saveUsuario = function(usuario){
     return usuariosData.saveUsuario(usuario);
 };

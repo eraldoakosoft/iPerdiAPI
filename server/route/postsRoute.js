@@ -22,7 +22,7 @@ router.put('/:id', async function(req, res){
 router.put('/status/:id', async function(req, res){
     const post = req.body;
     await postsService.updateStatusPost(req.params.id, post.status);
-    res.send();
+    res.end();
 });
 
 router.get('/', async function(req, res){
