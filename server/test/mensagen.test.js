@@ -64,7 +64,7 @@ const msgteste = function(emitente, destinatario){
     return mensagem;
 }
 
-test('Deveria pegar mensagens', async function(){
+/* test('Deveria pegar mensagens', async function(){
     const enderecoEmitenete = await enderecoService.saveEndereco(address());
     const emitente = await usuariosService.saveUsuario(usertest(enderecoEmitenete.id_endereco));
     const enderecoDestinatario = await enderecoService.saveEndereco(address());
@@ -116,7 +116,7 @@ test('Deveria apagar uma mensagem', async function(){
     
 
 });
-
+ */
 /*
 
 test('Should update a user', async function(){
