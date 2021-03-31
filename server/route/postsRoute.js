@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const postsService = require('../service/postsService');
+const login = require("../middleware/login");
 
-router.post('/', async function(req, res){
+router.post('/', login.obrigatorio, async function(req, res){
     const post = req.body;
     const novoPost = await postsService.savePost(post);
     res.json(novoPost);

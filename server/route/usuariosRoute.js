@@ -22,23 +22,7 @@ router.post('/usuario', async function (req, res) {
     res.json(newUser);
 });
 
-router.post('/cadastro', async function (req, res) {
-    const usuario = req.body;
-    const verify = await usuariosService.getUsuarioEmail(usuario.email);
-    if (!verify > 0) {
-        bcrypt.hash(usuario.senha, 10, async (errBcrypt, hash) => {
-            if (errBcrypt) {
-                return res.status(500).send({ error: errBcrypt })
-            } else {
-                usuario.senha = hash;
-                const newUser = await usuariosService.saveUsuario(usuario);
-                return res.json(newUser);
-            }
-        });
-    } else {
-        return res.status(409).send({ mensagem: 'Usuário já cadastrado!' })
-    }
-});
+router.post('/cadastro', usuariosService.saveUsuario);
 
 router.post('/login', async function (req, res) {
     const user = await usuariosService.getUsuarioEmail(req.body.email);
