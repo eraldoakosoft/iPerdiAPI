@@ -1,12 +1,21 @@
 const usuariosData = require('../data/usuariosData');
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
+const secret = require('../help/secret.json');
+const dateFormat = require('../help/dateFormat');
 
-exports.getUsuarios = function () {
-    return usuariosData.getUsuarios();
+exports.getUsuarios = async function (req, res) {
+    const usuarios = await usuariosData.getUsuarios();
+    return res.json(usuarios);
 };
 
-exports.getUsuario = function (id) {
-    return usuariosData.getUsuario(id);
+exports.getUsuario = async function (req, res) {
+    if (req.usuario.id_usuario == req.params.id) {
+        const usuario = await usuariosData.getUsuario(req.params.id);
+        return res.status(200).json(usuario);
+    } else {
+        return res.status(403).send({ mensagem: "Usuário diferente" })
+    }
 };
 
 exports.saveUsuario = async (req, res) => {
@@ -27,14 +36,56 @@ exports.saveUsuario = async (req, res) => {
     }
 };
 
-exports.deleteUsuario = function (id) {
-    return usuariosData.deleteUsuario(id);
+exports.inativarUsuario = async function (req, res) {
+    if (req.usuario.id_usuario == req.params.id) {
+        const updated_at = dateFormat.dateFormat(new Date(), 'Y-m-d h:i:s');
+        const usuario = {status: false, updated_at: updated_at}
+        await usuariosData.inativarUsuario(req.params.id, usuario);
+        return res.status(200).send({ mensagem: "Usuário Excluido com sucesso!" });
+    } else {
+        return res.status(403).send({ mensagem: "Usuário diferente" });
+    }
 };
 
-exports.updateUsuario = function (id, usuario) {
-    return usuariosData.updateUsuario(id, usuario);
+
+exports.updateUsuario = async function (req, res) {
+    if (req.usuario.id_usuario == req.params.id) {
+        bcrypt.hash(req.body.senha, 10, async (errBcrypt, hash) => {
+            if (errBcrypt) {
+                return res.status(500).send({ error: errBcrypt })
+            } else {
+                req.body.senha = hash;
+                await usuariosData.updateUsuario(req.usuario.id_usuario, req.body);
+                return res.status(200).send({ mensagem: "Atualizado com sucesso!" });
+            }
+        });
+    } else {
+        res.status(403).send({ mensagem: "Usuário diferente" })
+    }
 };
 
-exports.getUsuarioEmail = function( email){
+exports.getUsuarioEmail = function (email) {
     return usuariosData.getUsuarioEmail(email);
 };
+
+exports.Login = async (req, res) => {
+    const user = await usuariosData.getUsuarioEmail(req.body.email);
+    if (user < 1) {
+        return res.status(500).send({ mensagem: "Falha na autenticação" });
+    } else {
+        bcrypt.compare(req.body.senha, user.senha, (err, result) => {
+            if (err) {
+                return res.status(401).send({ mensagem: "Falha na autenticação" });
+            }
+            if (result) {
+                const token = jwt.sign({
+                    id_usuario: user.id_usuario,
+                    email: user.email,
+                    nick_name: user.nick_name
+                }, secret.secret, { expiresIn: "1h" });
+                return res.status(200).send({ mensagem: "Autenticado com sucesso", token: token });
+            }
+            return res.status(401).send({ mensagem: "Falha na autenticação" });
+        });
+    }
+}
