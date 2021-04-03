@@ -6,7 +6,7 @@ const dateFormat = require('../help/dateFormat');
 
 exports.getUsuarios = async function (req, res) {
     const usuarios = await usuariosData.getUsuarios();
-    return res.json(usuarios);
+    return res.status(200).json(usuarios);
 };
 
 exports.getUsuario = async function (req, res) {
@@ -14,7 +14,7 @@ exports.getUsuario = async function (req, res) {
         const usuario = await usuariosData.getUsuario(req.params.id);
         return res.status(200).json(usuario);
     } else {
-        return res.status(403).send({ mensagem: "Usuário diferente" })
+        return res.status(403).send({ mensagem: "Usuário diferente" });
     }
 };
 

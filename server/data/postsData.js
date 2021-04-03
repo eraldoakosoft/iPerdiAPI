@@ -8,6 +8,9 @@ exports.savePost = function(post){
 exports.deletePost = function(id){
     return database.none('DELETE FROM postagem WHERE id_postagem = $1', [id]);
 };
+exports.iniativarPost = function(id, post){
+    return database.none('UPDATE postagem SET apagado = $1, updated_at = $2 WHERE id_postagem = $3', [ post.apagado, post.updated_at,  id]);
+};
 
 exports.updatePost = function(id, post){
     return database.none('UPDATE postagem SET nome = $1, nome_mae = $2, data_nascimento = $3, genero = $4, numero_documento = $5, tipo = $6,  descricao = $7, recompensa = $8, status = $9, tipo_postagem = $10, updated_at = $11 WHERE id_postagem = $12', [
@@ -15,8 +18,8 @@ exports.updatePost = function(id, post){
     ]);
 };
 
-exports.updateStatusPost = function(id, status){
-    return database.none('UPDATE postagem SET status = $1 WHERE id_postagem = $2', [status, id])
+exports.updateStatusPost = function(id, post){
+    return database.none('UPDATE postagem SET status = $1, updated_at = $2 WHERE id_postagem = $3', [post.status, post.updated_at, id])
 }
 
 exports.getPost = function(id){

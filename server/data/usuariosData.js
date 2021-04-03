@@ -1,7 +1,7 @@
 const database = require('../infra/database');
 
 exports.getUsuarios = function(){
-    return database.query('select nick_name, nome, telefone from usuario');
+    return database.query('select nick_name, nome, telefone from usuario where status = true ');
 };
 exports.getUsuario = function(id){
     return database.oneOrNone('select nick_name, nome, genero, cpf, rg, nome_mae, data_nascimento, id_endereco, email, telefone, status from usuario where id_usuario = $1', [id]);
