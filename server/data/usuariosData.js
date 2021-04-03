@@ -28,4 +28,16 @@ exports.inativarUsuario = function(id, usuario){
 
 exports.getUsuarioEmail = function(email){
     return database.oneOrNone('SELECT * FROM usuario WHERE email = $1',[email]);
+};
+
+exports.getUsuarioCPF = function(cpf){
+    return database.oneOrNone('SELECT * FROM usuario WHERE numero_documento = $1', [cpf]);
+};
+
+exports.getUsuarioNome = function(nome){
+    return database.oneOrNone('SELECT * FROM usuario WHERE nome = $1', [nome])
+}
+
+exports.getUsuarioNomeMae = function(nome_mae){
+    return database.oneOrNone('SELECT * FROM usuario WHERE nome_mae = $1', [nome_mae])
 }

@@ -1,13 +1,24 @@
 const postData = require('../data/postsData');
+const enderecoData = require('../data/enderecoData');
+const usuarioData = require('../data/usuariosData');
 const dateFormat = require('../help/dateFormat');
+const datahora = require('../help/datahora');
 
 exports.savePost = async function (req, res) {
-    if (req.usuario.id_usuario == req.body.id_usuario) {
+    const usuarioresponse = await usuarioData.getUsuario(req.usuario.id_usuario);
+    if(usuarioresponse != null){
         const post = req.body;
+        post.local_encontrado.created_at = datahora.created_at;
+        post.local_encontrado.updated_at = datahora.updated_at;
+        const enderecoresponse = await enderecoData.saveEndereco(post.local_encontrado);
+        post.local_encontrado = enderecoresponse.id_endereco;
+        post.id_usuario = req.usuario.id_usuario;
+        post.created_at = datahora.created_at;
+        post.updated_at = datahora.updated_at;  
         const novoPost = await postData.savePost(post);
         return res.status(200).json(novoPost);
-    } else {
-        return res.status(403).send({ mensagem: "Usuário diferente" });
+    }else{
+        return res.status(403).send({mensagem:"Usuario não cadastrado"})
     }
 };
 
