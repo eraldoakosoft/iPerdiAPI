@@ -17,7 +17,11 @@ exports.deleteEndereco = function(id){
     return database.none('DELETE FROM endereco WHERE id_endereco = $1',[id]);
 };
 
+exports.inativarEndereco = function(id, endereco){
+    return database.none('UPDATE endereco SET status = $1, updated_at = $2 WHERE id_endereco = $3',[endereco.status, endereco.updated_at, id]);
+};
+
 exports.updateEndereco = function(id, endereco){
-    return database.one('UPDATE endereco SET logradouro = $1, numero = $2, cep = $3, cidade = $4, uf = $5, status = $6, updated_at = $7 WHERE id_endereco = $8 RETURNING * ',
-    [endereco.logradouro, endereco.numero, endereco.cep, endereco.cidade, endereco.uf, endereco.status, endereco.update_at, id]);
+    return database.none('UPDATE endereco SET logradouro = $1, numero = $2, cep = $3, cidade = $4, uf = $5, status = $6, updated_at = $7 WHERE id_endereco = $8',
+    [endereco.logradouro, endereco.numero, endereco.cep, endereco.cidade, endereco.uf, endereco.status, endereco.updated_at, id]);
 };

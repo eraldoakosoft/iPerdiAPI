@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
-const segredo = require('../help/secret.json');
+const config = require('../help/config.json');
 
 exports.obrigatorio = (req, res, next) =>{
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decode = jwt.verify(token, segredo.secret);
+        const decode = jwt.verify(token, config.secret);
         req.usuario = decode;
         next();
     } catch (error) {
@@ -15,7 +15,7 @@ exports.obrigatorio = (req, res, next) =>{
 exports.opcional = (req, res, next) =>{
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decode = jwt.verify(token, secrect.secrect);
+        const decode = jwt.verify(token, config.secrect);
         req.usuario = decode;
         next();
     } catch (error) {

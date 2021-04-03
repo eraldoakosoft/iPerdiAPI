@@ -2,7 +2,7 @@ const usuariosData = require('../data/usuariosData');
 const enderecoData = require('../data/enderecoData');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
-const secret = require('../help/secret.json');
+const config = require('../help/config.json');
 const dateFormat = require('../help/dateFormat');
 const datahora = require('../help/datahora');
 
@@ -78,19 +78,20 @@ exports.getUsuarioEmail = function (email) {
 
 exports.Login = async (req, res) => {
     const user = await usuariosData.getUsuarioEmail(req.body.email);
+    
     if (user < 1) {
         return res.status(500).send({ mensagem: "Falha na autenticação" });
     } else {
         bcrypt.compare(req.body.senha, user.senha, (err, result) => {
             if (err) {
-                return res.status(401).send({ mensagem: "Falha na autenticação" });
+                return res.status(401).send({ mensagem: "Falha na autenticação Senha" });
             }
             if (result) {
                 const token = jwt.sign({
                     id_usuario: user.id_usuario,
                     email: user.email,
                     nick_name: user.nick_name
-                }, secret.secret, { expiresIn: "1h" });
+                }, config.secret, { expiresIn: "1h" });
                 return res.status(200).send({ mensagem: "Autenticado com sucesso", token: token });
             }
             return res.status(401).send({ mensagem: "Falha na autenticação" });

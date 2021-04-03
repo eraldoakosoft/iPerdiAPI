@@ -27,7 +27,7 @@ exports.inativarUsuario = function(id, usuario){
 };
 
 exports.getUsuarioEmail = function(email){
-    return database.oneOrNone('SELECT * FROM usuario WHERE email = $1',[email]);
+    return database.oneOrNone('SELECT id_usuario, nick_name, cpf, rg, id_endereco, senha, email, status FROM usuario WHERE email = $1',[email]);
 };
 
 exports.getUsuarioCPF = function(cpf){

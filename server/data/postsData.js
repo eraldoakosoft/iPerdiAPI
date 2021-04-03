@@ -26,6 +26,10 @@ exports.getPost = function(id){
     return database.oneOrNone('SELECT * FROM postagem WHERE id_postagem = $1', [id]);
 };
 
+exports.getLocalEncontradoPost = function(local_encontrado){
+    return database.oneOrNone('SELECT id_postagem, id_usuario FROM postagem WHERE local_encontrado = $1', [local_encontrado]);
+};
+
 exports.getPosts = function(){
     return database.query('SELECT * FROM postagem');
 };
