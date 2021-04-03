@@ -9,7 +9,7 @@ exports.getEndereco = function(id){
 };
 
 exports.saveEndereco = function(endereco){
-    return database.one('INSERT INTO endereco (logradouro, numero, cep, cidade, uf, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING * ',
+    return database.one('INSERT INTO endereco (logradouro, numero, cep, cidade, uf, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id_endereco ',
      [endereco.logradouro, endereco.numero, endereco.cep, endereco.cidade, endereco.uf, endereco.status, endereco.created_at, endereco.update_at]);
 };
 
