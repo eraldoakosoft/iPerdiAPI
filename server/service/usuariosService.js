@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
 const secret = require('../help/secret.json');
 const dateFormat = require('../help/dateFormat');
+const datahora = require('../help/datahora');
 
 exports.getUsuarios = async function (req, res) {
     const usuarios = await usuariosData.getUsuarios();
@@ -21,10 +22,14 @@ exports.getUsuario = async function (req, res) {
 
 exports.saveUsuario = async (req, res) => {
     const usuario = req.body;
-    const id_endereco = await enderecoData.saveEndereco(usuario.id_endereco);
-    usuario.id_endereco = id_endereco.id_endereco;
     const verify = await usuariosData.getUsuarioEmail(usuario.email);
     if (!verify > 0) {
+        usuario.id_endereco.created_at = datahora.created_at;
+        usuario.id_endereco.updated_at = datahora.updated_at;
+        const id_endereco = await enderecoData.saveEndereco(usuario.id_endereco);
+        usuario.id_endereco = id_endereco.id_endereco;
+        usuario.created_at = datahora.created_at;
+        usuario.updated_at = datahora.updated_at;
         bcrypt.hash(usuario.senha, 10, async (errBcrypt, hash) => {
             if (errBcrypt) {
                 return res.status(500).send({ error: errBcrypt })
@@ -42,7 +47,7 @@ exports.saveUsuario = async (req, res) => {
 exports.inativarUsuario = async function (req, res) {
     if (req.usuario.id_usuario == req.params.id) {
         const updated_at = dateFormat.dateFormat(new Date(), 'Y-m-d h:i:s');
-        const usuario = {status: false, updated_at: updated_at}
+        const usuario = { status: false, updated_at: updated_at }
         await usuariosData.inativarUsuario(req.params.id, usuario);
         return res.status(200).send({ mensagem: "Usuário Excluido com sucesso!" });
     } else {
