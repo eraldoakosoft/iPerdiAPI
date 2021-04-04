@@ -31,12 +31,12 @@ exports.getUsuarioEmail = function(email){
 };
 
 exports.getUsuarioCPF = function(cpf){
-    return database.oneOrNone('SELECT * FROM usuario WHERE numero_documento = $1', [cpf]);
+    return database.oneOrNone('SELECT * FROM usuario WHERE cpf = $1', [cpf]);
 };
 
-exports.getUsuarioNome = function(nome){
-    return database.oneOrNone('SELECT * FROM usuario WHERE nome = $1', [nome])
-}
+exports.getUsuarioNomeAndNomeMae = function(post){
+    return database.oneOrNone('SELECT * FROM usuario WHERE unaccent(nome) ILIKE unaccent($1) and unaccent(nome_mae) ILIKE unaccent($2)', [post.nome, post.nome_mae]);
+};
 
 exports.getUsuarioNomeMae = function(nome_mae){
     return database.oneOrNone('SELECT * FROM usuario WHERE nome_mae = $1', [nome_mae])

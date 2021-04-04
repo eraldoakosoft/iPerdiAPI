@@ -1,10 +1,52 @@
 const postData = require('../data/postsData');
 const enderecoData = require('../data/enderecoData');
 const usuarioData = require('../data/usuariosData');
+const notificacaoData = require('../data/notificacaoData');
 const dateFormat = require('../help/dateFormat');
 const datahora = require('../help/datahora');
 
+const novanotificacao = function (id_usuario, nick_name) {
+    const noti = {
+        id_usuario: id_usuario,
+        descricao: `Seu documento foi encontrado pelo ${nick_name}`,
+        status: true,
+        created_at: datahora.created_at(),
+        updated_at: datahora.updated_at()
+    };
+    return noti;
+}
+
+const verificarSeTemDono = async function (usuario, post) {
+    if (post.tipo_postagem == 'Achado') {
+        if (post.cpf != '' & post.cpf != null) {
+            const response = await usuarioData.getUsuarioCPF(post.cpf);
+            if (response != null) {
+                if (response.cpf === post.cpf) {
+                    const notificacao = novanotificacao(usuario.id_usuario, usuario.nick_name);
+                    notificacaoData.saveNotificacao(notificacao);
+                } else {
+                    console.log("Não achei pelo cpf");
+                }
+            } else {
+                console.log("Cpf não encontrado");
+            }
+        } else {
+            //Não tem CPF
+            const response = await usuarioData.getUsuarioNomeAndNomeMae(post);
+            if (response != null) {
+                const notificacao = novanotificacao(usuario.id_usuario, usuario.nick_name);
+                notificacaoData.saveNotificacao(notificacao);
+            }else{
+                console.log("Não encontrado pelo nome da nome e nome mãe");
+            }
+        }
+    } else {
+        console.log('Perdido');
+    }
+}
+
 exports.savePost = async function (req, res) {
+    verificarSeTemDono(req.usuario, req.body);
     const usuarioresponse = await usuarioData.getUsuario(req.usuario.id_usuario);
     if(usuarioresponse != null){
         const post = req.body;
