@@ -1,7 +1,7 @@
 const postData = require('../data/postsData');
 const enderecoData = require('../data/enderecoData');
 const usuarioData = require('../data/usuariosData');
-const notificacaoData = require('../data/notificacaoData');
+const notificacaoData = require('../notificacao/data/notificacaoData');
 const dateFormat = require('../help/dateFormat');
 const datahora = require('../help/datahora');
 
@@ -9,7 +9,7 @@ const novanotificacao = function (id_usuario, nick_name) {
     const noti = {
         id_usuario: id_usuario,
         descricao: `Seu documento foi encontrado pelo ${nick_name}`,
-        status: true,
+        status: false,
         created_at: datahora.created_at(),
         updated_at: datahora.updated_at()
     };

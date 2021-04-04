@@ -35,8 +35,11 @@ exports.saveUsuario = async (req, res) => {
                 return res.status(500).send({ error: errBcrypt })
             } else {
                 usuario.senha = hash;
-                const newUser = await usuariosData.saveUsuario(usuario);
-                return res.json(newUser);
+                const response = await usuariosData.saveUsuario(usuario);
+                if (response.mensagem) {
+                    return res.status(403).send(response);
+                }
+                return res.status(403).json(response);
             }
         });
     } else {
@@ -63,8 +66,12 @@ exports.updateUsuario = async function (req, res) {
                 return res.status(500).send({ error: errBcrypt })
             } else {
                 req.body.senha = hash;
-                await usuariosData.updateUsuario(req.usuario.id_usuario, req.body);
+                const response = await usuariosData.updateUsuario(req.usuario.id_usuario, req.body);
+                if (response.mensagem) {
+                    return res.status(403).send(response);
+                }
                 return res.status(200).send({ mensagem: "Atualizado com sucesso!" });
+
             }
         });
     } else {
@@ -78,7 +85,7 @@ exports.getUsuarioEmail = function (email) {
 
 exports.Login = async (req, res) => {
     const user = await usuariosData.getUsuarioEmail(req.body.email);
-    
+
     if (user < 1) {
         return res.status(500).send({ mensagem: "Falha na autenticação" });
     } else {

@@ -1,4 +1,4 @@
-const database = require('../infra/database').catch(error => { return { mensagem: error.detail } });
+const database = require('../infra/database');
 
 exports.getUsuarios = function () {
     return database.query('select nick_name, nome, telefone from usuario where status = true ').catch(error => { return { mensagem: error.detail } });
