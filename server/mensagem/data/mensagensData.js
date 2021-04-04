@@ -1,4 +1,4 @@
-const database = require('../infra/database');
+const database = require('../../infra/database');
 
 exports.saveMsg = function (msg) {
     return database.one('INSERT INTO mensagem (id_emitente, id_destinatario, descricao, status, created_at, updated_at ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING * ', [

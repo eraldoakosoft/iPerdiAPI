@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mensagemService = require('../service/mensagensService');
-const login = require("../middleware/login");
+const login = require("../../middleware/login");
 
 router.post('/', login.obrigatorio, async function(req, res){
     const msg = req.body;

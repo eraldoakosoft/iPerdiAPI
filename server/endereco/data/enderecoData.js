@@ -1,4 +1,4 @@
-const database = require('../infra/database');
+const database = require('../../infra/database');
 
 exports.getEnderecos = function () {
     return database.query('SELECT * FROM endereco').catch(error => { return { mensagem: error.detail } });

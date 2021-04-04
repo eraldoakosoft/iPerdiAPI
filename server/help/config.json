@@ -1,5 +1,8 @@
 {
     "secret" : "trabalhoTCCfatecAmericana",
     "adm": "Eraldo",
-    "email": "eraldo@gmail.com"
+    "email": "eraldo@gmail.com",
+    "db": {
+        "senha": "Einstein3628"
+    }
 }

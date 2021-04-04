@@ -1,8 +1,8 @@
 const enderecoData = require('../data/enderecoData');
-const usuarioData = require('../data/usuariosData');
-const postsData = require('../data/postsData');
-const config = require('../help/config.json');
-const datahora = require('../help/datahora');
+const usuarioData = require('../../usuario/data/usuariosData');
+const postsData = require('../../postagem/data/postsData');
+const config = require('../../help/config.json');
+const datahora = require('../../help/datahora');
 
 exports.getEnderecos = async function (req, res) {
     if (req.usuario.email === config.email && req.usuario.nick_name === config.adm) {

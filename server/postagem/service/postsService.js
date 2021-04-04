@@ -1,9 +1,9 @@
 const postData = require('../data/postsData');
-const enderecoData = require('../data/enderecoData');
-const usuarioData = require('../data/usuariosData');
-const notificacaoData = require('../notificacao/data/notificacaoData');
-const dateFormat = require('../help/dateFormat');
-const datahora = require('../help/datahora');
+const enderecoData = require('../../endereco/data/enderecoData');
+const usuarioData = require('../../usuario/data/usuariosData');
+const notificacaoData = require('../../notificacao/data/notificacaoData');
+const dateFormat = require('../../help/dateFormat');
+const datahora = require('../../help/datahora');
 
 const novanotificacao = function (id_usuario, nick_name) {
     const noti = {

@@ -1,10 +1,10 @@
 const usuariosData = require('../data/usuariosData');
-const enderecoData = require('../data/enderecoData');
+const enderecoData = require('../../endereco/data/enderecoData');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
-const config = require('../help/config.json');
-const dateFormat = require('../help/dateFormat');
-const datahora = require('../help/datahora');
+const config = require('../../help/config.json');
+const dateFormat = require('../../help/dateFormat');
+const datahora = require('../../help/datahora');
 
 exports.getUsuarios = async function (req, res) {
     const usuarios = await usuariosData.getUsuarios();
@@ -85,7 +85,6 @@ exports.getUsuarioEmail = function (email) {
 
 exports.Login = async (req, res) => {
     const user = await usuariosData.getUsuarioEmail(req.body.email);
-
     if (user < 1) {
         return res.status(500).send({ mensagem: "Falha na autenticação" });
     } else {

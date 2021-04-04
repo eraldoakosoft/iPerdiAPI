@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const enderecoService = require('../service/enderecoService');
-const logado = require('../middleware/logado');
+const logado = require('../../middleware/logado');
 
 router.get('/', logado.obrigatorio, enderecoService.getEnderecos);
 router.get('/:id', enderecoService.getEndereco);
