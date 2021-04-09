@@ -7,7 +7,11 @@ router.get('/usuarios', login.obrigatorio, usuariosService.getUsuarios);
 router.get('/usuario/:id', login.obrigatorio, usuariosService.getUsuario );
 router.post('/cadastro', usuariosService.saveUsuario);
 router.post('/login', usuariosService.Login);
+
 router.put('/usuario/atualizar/:id', login.obrigatorio, usuariosService.updateUsuario);
 router.delete('/usuario/:id', login.obrigatorio, usuariosService.inativarUsuario);
+
+router.post('/salvarSocket', login.obrigatorio, usuariosService.salvarSocket);
+router.get('/emailsocket/:email', usuariosService.getUsuarioEmailSocket);
 
 module.exports = router;

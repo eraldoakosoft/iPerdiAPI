@@ -39,7 +39,7 @@ exports.saveUsuario = async (req, res) => {
                 if (response.mensagem) {
                     return res.status(403).send(response);
                 }
-                return res.status(403).json(response);
+                return res.status(200).json(response);
             }
         });
     } else {
@@ -103,4 +103,19 @@ exports.Login = async (req, res) => {
             return res.status(401).send({ mensagem: "Falha na autenticação" });
         });
     }
+}
+
+exports.salvarSocket = async (req, res) => {
+    /* console.log(req.usuario.id_usuario); */
+    const response = await usuariosData.salvarSocket(req.usuario.id_usuario, req.body.socketID)
+    if(response.mensagem){
+        console.log(response);
+        return res.status(500).send({mensagem: "Error no servidor"});
+    }
+    return res.status(200).send({mensagem: "Salvo com sucesso!"});
+}
+
+exports.getUsuarioEmailSocket = async (req, res) => {
+    const response = await usuariosData.getUsuarioEmailSocket(req.params.email);
+    return res.status(200).json(response);
 }

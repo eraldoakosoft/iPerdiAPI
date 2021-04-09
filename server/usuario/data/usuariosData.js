@@ -41,3 +41,12 @@ exports.getUsuarioNomeAndNomeMae = function (post) {
 exports.getUsuarioNomeMae = function (nome_mae) {
     return database.oneOrNone('SELECT * FROM usuario WHERE nome_mae = $1', [nome_mae]).catch(error => { return { mensagem: error.detail } });
 }
+
+exports.salvarSocket = function (id, socket) {
+    return database.one('UPDATE usuario SET socketID = $1 WHERE id_usuario = $2 RETURNING *',
+        [socket, id]).catch(error => {  return { mensagem: error } });
+};
+
+exports.getUsuarioEmailSocket = function (email) {
+    return database.oneOrNone('SELECT id_usuario, socketID FROM usuario WHERE email = $1', [email]).catch(error => { return { mensagem: error } });
+};
