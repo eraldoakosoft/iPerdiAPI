@@ -9,4 +9,4 @@ app.use('/mensagens', require('./mensagem/router/mensagensRoute'));
 app.use('/notificacao', require('./notificacao/router/notificacaoRoute'));
 
 app.listen(3003);
-console.log("Online na porta! : 3003");
+console.log("Listen in port : 3003");
