@@ -46,6 +46,7 @@ const verificarSeTemDono = async function (usuario, post) {
 }
 
 exports.savePost = async function (req, res) {
+    console.log(req.file);
     verificarSeTemDono(req.usuario, req.body);
     const usuarioresponse = await usuarioData.getUsuario(req.usuario.id_usuario);
     if(usuarioresponse != null){
@@ -63,6 +64,11 @@ exports.savePost = async function (req, res) {
         return res.status(403).send({mensagem:"Usuario não cadastrado"})
     }
 };
+
+exports.saveImagem = async function(req, res){
+    console.log(req.file);
+    res.end();
+}
 
 exports.iniativarPost = async function (req, res) {
     const post = await postData.getPost(req.params.id);

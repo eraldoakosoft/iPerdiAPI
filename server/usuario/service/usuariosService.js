@@ -23,27 +23,32 @@ exports.getUsuario = async function (req, res) {
 exports.saveUsuario = async (req, res) => {
     const usuario = req.body;
     const verify = await usuariosData.getUsuarioEmail(usuario.email);
-    if (!verify > 0) {
-        usuario.id_endereco.created_at = datahora.created_at;
-        usuario.id_endereco.updated_at = datahora.updated_at;
-        const id_endereco = await enderecoData.saveEndereco(usuario.id_endereco);
-        usuario.id_endereco = id_endereco.id_endereco;
-        usuario.created_at = datahora.created_at;
-        usuario.updated_at = datahora.updated_at;
-        bcrypt.hash(usuario.senha, 10, async (errBcrypt, hash) => {
-            if (errBcrypt) {
-                return res.status(500).send({ error: errBcrypt })
-            } else {
-                usuario.senha = hash;
-                const response = await usuariosData.saveUsuario(usuario);
-                if (response.mensagem) {
-                    return res.status(403).send(response);
+    try {
+        if (!verify > 0) {
+            usuario.id_endereco.created_at = datahora.created_at();
+            usuario.id_endereco.updated_at = datahora.updated_at();
+            const id_endereco = await enderecoData.saveEndereco(usuario.id_endereco);
+            usuario.id_endereco = id_endereco.id_endereco;
+            usuario.created_at = datahora.created_at;
+            usuario.updated_at = datahora.updated_at;
+            bcrypt.hash(usuario.senha, 10, async (errBcrypt, hash) => {
+                if (errBcrypt) {
+                    return res.status(500).send({ error: errBcrypt })
+                } else {
+                    usuario.senha = hash;
+                    const response = await usuariosData.saveUsuario(usuario);
+                    if (response.mensagem) {
+                        return res.status(403).send(response);
+                    }
+                    return res.status(200).json(response);
                 }
-                return res.status(200).json(response);
-            }
-        });
-    } else {
-        return res.status(409).send({ mensagem: 'Usuário já cadastrado!' })
+            });
+        } else {
+            return res.status(409).send({ mensagem: 'Usuário já cadastrado!' })
+        }
+    } catch (error) {
+        console.log("Erro ao cadastrar usuário: ");
+        console.log(error);
     }
 };
 
@@ -86,7 +91,7 @@ exports.getUsuarioEmail = function (email) {
 exports.Login = async (req, res) => {
     const user = await usuariosData.getUsuarioEmail(req.body.email);
     if (user < 1) {
-        return res.status(500).send({ mensagem: "Falha na autenticação" });
+        return res.status(401).send({ mensagem: "Falha na autenticação" });
     } else {
         bcrypt.compare(req.body.senha, user.senha, (err, result) => {
             if (err) {
@@ -98,7 +103,7 @@ exports.Login = async (req, res) => {
                     email: user.email,
                     nick_name: user.nick_name
                 }, config.secret, { expiresIn: "1h" });
-                return res.status(200).send({ mensagem: "Autenticado com sucesso", token: token });
+                return res.status(200).send({ mensagem: "Autenticado com sucesso", nick_name:user.nick_name, token: token });
             }
             return res.status(401).send({ mensagem: "Falha na autenticação" });
         });
