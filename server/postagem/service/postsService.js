@@ -36,7 +36,7 @@ const verificarSeTemDono = async function (usuario, post) {
             if (response != null) {
                 const notificacao = novanotificacao(usuario.id_usuario, usuario.nick_name);
                 notificacaoData.saveNotificacao(notificacao);
-            }else{
+            } else {
                 console.log("Não encontrado pelo nome da nome e nome mãe");
             }
         }
@@ -46,26 +46,31 @@ const verificarSeTemDono = async function (usuario, post) {
 }
 
 exports.savePost = async function (req, res) {
-    console.log(req.file);
+    console.log(req.body);
     verificarSeTemDono(req.usuario, req.body);
     const usuarioresponse = await usuarioData.getUsuario(req.usuario.id_usuario);
-    if(usuarioresponse != null){
-        const post = req.body;
-        post.local_encontrado.created_at = datahora.created_at;
-        post.local_encontrado.updated_at = datahora.updated_at;
-        const enderecoresponse = await enderecoData.saveEndereco(post.local_encontrado);
-        post.local_encontrado = enderecoresponse.id_endereco;
-        post.id_usuario = req.usuario.id_usuario;
-        post.created_at = datahora.created_at;
-        post.updated_at = datahora.updated_at;  
-        const novoPost = await postData.savePost(post);
-        return res.status(200).json(novoPost);
-    }else{
-        return res.status(403).send({mensagem:"Usuario não cadastrado"})
+    if (usuarioresponse != null) {
+        try {
+            const post = req.body;
+            post.local_encontrado.created_at = datahora.datahora();
+            post.local_encontrado.updated_at = datahora.datahora();
+            const enderecoresponse = await enderecoData.saveEndereco(post.local_encontrado);
+            post.local_encontrado = enderecoresponse.id_endereco;
+            post.id_usuario = req.usuario.id_usuario;
+            post.created_at = datahora.created_at;
+            post.updated_at = datahora.updated_at;
+            const novoPost = await postData.savePost(post);
+            return res.status(200).json(novoPost);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send({ mensagem: "Erro", erro: error })
+        }
+    } else {
+        return res.status(403).send({ mensagem: "Usuario não cadastrado" })
     }
 };
 
-exports.saveImagem = async function(req, res){
+exports.saveImagem = async function (req, res) {
     console.log(req.file);
     res.end();
 }

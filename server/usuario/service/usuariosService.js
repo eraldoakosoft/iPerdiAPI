@@ -102,7 +102,7 @@ exports.Login = async (req, res) => {
                     id_usuario: user.id_usuario,
                     email: user.email,
                     nick_name: user.nick_name
-                }, config.secret, { expiresIn: "1h" });
+                }, config.secret, { expiresIn: "10h" });
                 return res.status(200).send({ mensagem: "Autenticado com sucesso", nick_name:user.nick_name, token: token });
             }
             return res.status(401).send({ mensagem: "Falha na autenticação" });

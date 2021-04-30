@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/870741ac-ec73-48f4-8e27-e96b877a0c7c/resourceGroups/TESTE/providers/Microsoft.Web/sites/iPerdi",
+    "appService.deploySubpath": "."
+}
